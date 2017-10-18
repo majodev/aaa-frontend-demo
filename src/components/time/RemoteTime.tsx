@@ -32,6 +32,12 @@ export default class Component extends React.Component<IProps, IState> {
         };
     }
 
+    // this is called after the component was first rendered right after it was mounted!
+    componentDidMount() {
+        this.fetchRemoteTime();
+    }
+
+    // bound on button (used as event handler!), therefore use this syntax!
     fetchRemoteTime = async () => {
 
         this.setState({
