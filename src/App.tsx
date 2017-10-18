@@ -2,12 +2,13 @@ import * as React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import * as injectTapEventPlugin from "react-tap-event-plugin";
 import { IntlProvider } from "react-intl";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import muiTheme from "./muiTheme";
 import baseLocale from "./i18n/en";
 import Main from "./components/Main";
 import FeedRoute from "./components/feed/FeedRoute";
+import Navigation from "./components/Navigation";
 
 // Needed for onTouchTap click handlers 
 // see http://stackoverflow.com/a/34015469/988941
@@ -20,10 +21,7 @@ class App extends React.Component {
                 <IntlProvider locale="en" messages={baseLocale}>
                     <Router>
                         <div>
-                            <ul>
-                                <li><Link to="/">Home</Link></li>
-                                <li><Link to="/feed">Feed</Link></li>
-                            </ul>
+                            <Navigation />
                             <Route exact path="/" component={Main} />
                             <Route path="/feed" component={FeedRoute} />
                         </div>
