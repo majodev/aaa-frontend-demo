@@ -30,7 +30,6 @@ export default class Component extends React.Component<IProps, IState> {
             loading: false,
             data: null
         };
-
     }
 
     fetchRemoteTime = async () => {
