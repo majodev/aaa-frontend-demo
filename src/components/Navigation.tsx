@@ -1,16 +1,13 @@
 import * as React from "react";
 import styled from "styled-components";
 import * as mui from "material-ui";
-import { Link, Router, RouteComponentProps } from "react-router-dom";
+
+import MenuItemLink from "./common/MenuItemLink";
 
 interface IProps { }
 interface IState {
     open: boolean;
 }
-
-const StyledLink = styled(Link) `
-    text-decoration: none;
-`;
 
 export default class Component extends React.Component<IProps, IState> {
 
@@ -39,12 +36,8 @@ export default class Component extends React.Component<IProps, IState> {
                         title="Rosenbauer"
                         showMenuIconButton={false}
                     />
-                    <StyledLink to="/">
-                        <mui.MenuItem onClick={this.handleClose}>Home</mui.MenuItem>
-                    </StyledLink>
-                    <StyledLink to="/feed">
-                        <mui.MenuItem onClick={this.handleClose}>Feed</mui.MenuItem>
-                    </StyledLink>
+                    <MenuItemLink onClick={this.handleClose} to="/" title="Home" />
+                    <MenuItemLink onClick={this.handleClose} to="/feed" title="Feed" />
                 </mui.Drawer>
             </div>
         );
