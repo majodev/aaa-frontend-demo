@@ -2,9 +2,9 @@
 
 This demo project was scaffolded through [aaa-create-react-app-typescript@v2.7.0](https://github.com/majodev/aaa-create-react-app-typescript), a customized react template project generator for at [all about apps](https://allaboutapps.at) using the preferred default settings from [Mario Ranftl](https://github.com/majodev).
 
-Used during workshops for customers to get an idea of typical react frontend related concerns / provide an easy way into into.
+Used during workshops for customers to get an idea of typical react frontend related concerns / provide an easy way into web frontend development.
 
-TODO: add link to sample app notes documenting each commit.
+> TODO: add link to sample app notes documenting each commit.
 
 ## Typical Dependencies at all about apps
 
