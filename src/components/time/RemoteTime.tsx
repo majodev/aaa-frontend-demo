@@ -4,7 +4,7 @@ import * as mui from "material-ui";
 import * as primitives from "../util/primitives";
 import * as animations from "../util/animations";
 import * as formatters from "../util/formatters";
-import FullScreenProgress from "./FullScreenProgress";
+import FullScreenProgress from "../common/FullScreenProgress";
 import * as config from "../../config";
 
 interface IJSONResponse {

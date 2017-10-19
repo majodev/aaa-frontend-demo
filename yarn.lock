@@ -14,6 +14,10 @@
   version "20.0.8"
   resolved "https://registry.npmjs.org/@types%2fjest/-/jest-20.0.8.tgz#7f8c97f73d20d3bf5448fbe33661a342002b5954"
 
+"@types/lodash@^4.14.78":
+  version "4.14.78"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.78.tgz#f26a0b38a44a832c652964803c7e48be05939d3f"
+
 "@types/material-ui@0.18.3":
   version "0.18.3"
   resolved "https://registry.npmjs.org/@types%2fmaterial-ui/-/material-ui-0.18.3.tgz#3a2a9fc81e57799419d8a58137800cd803d64a76"

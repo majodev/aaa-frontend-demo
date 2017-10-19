@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import muiTheme from "./muiTheme";
 import baseLocale from "./i18n/en";
 import Main from "./components/Main";
-import FeedRoute from "./components/feed/FeedRoute";
+import BeersRoute from "./components/beers/BeersRoute";
 import Navigation from "./components/Navigation";
 
 // Needed for onTouchTap click handlers 
@@ -23,7 +23,7 @@ class App extends React.Component {
                         <div>
                             <Navigation />
                             <Route exact path="/" component={Main} />
-                            <Route path="/feed" component={FeedRoute} />
+                            <Route path="/beers" component={BeersRoute} />
                         </div>
                     </Router>
                 </IntlProvider>

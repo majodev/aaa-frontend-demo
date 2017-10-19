@@ -3,7 +3,7 @@ const locale = {
     "main.subText": `Beginne damit {location} anzupassen und speichere zum neuladen.`,
     "nav.brand": `Marke`,
     "path.home": `Startseite`,
-    "path.feed": `Feed`
+    "path.beers": `Biere`
 };
 
 export type IAvailableI18nIds = typeof locale;

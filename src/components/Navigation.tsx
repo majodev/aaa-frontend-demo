@@ -59,8 +59,8 @@ export default class Component extends React.Component<IProps, IState> {
                     <MenuItemLink onClick={this.handleClose} to="/">
                         <i18n.FormattedMessage id="path.home" />
                     </MenuItemLink>
-                    <MenuItemLink onClick={this.handleClose} to="/feed">
-                        <i18n.FormattedMessage id="path.feed" />
+                    <MenuItemLink onClick={this.handleClose} to="/beers">
+                        <i18n.FormattedMessage id="path.beers" />
                     </MenuItemLink>
                 </mui.Drawer>
             </div>
