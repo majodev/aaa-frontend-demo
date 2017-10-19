@@ -17,6 +17,11 @@ function pathnameToI18NString(pathname: string): i18n.IDS {
         return "path.home";
     }
 
+    // Just show "beer detail" if on the beer detail page
+    if (pathname.indexOf("/beers/") !== -1) {
+        return "path.beers.detail";
+    }
+
     // else we need to parse and replace the path segments according to our spec
     // however, we lose compile time safety here.
     return `path${pathname.split("/").join(".")}` as i18n.IDS;

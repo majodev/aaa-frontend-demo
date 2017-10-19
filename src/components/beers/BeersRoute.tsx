@@ -1,4 +1,5 @@
 import * as React from "react";
+import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import * as mui from "material-ui";
 import * as _ from "lodash";
@@ -8,16 +9,15 @@ import FullScreenProgress from "../common/FullScreenProgress";
 import { IBeer } from "./IBeer";
 import * as CI from "../CI";
 
-interface IProps { }
 interface IState {
     remainingRequests: number;
     loading: boolean;
     beers: IBeer[];
 }
 
-export default class Component extends React.Component<IProps, IState> {
+export default class Component extends React.Component<RouteComponentProps<null>, IState> {
 
-    constructor(props: IProps) {
+    constructor(props: RouteComponentProps<null>) {
         super(props);
 
         this.state = {
@@ -67,6 +67,7 @@ export default class Component extends React.Component<IProps, IState> {
                                     </p>
                                 }
                                 secondaryTextLines={2}
+                                onTouchTap={() => { this.props.history.push(`/beers/${beer.id}`); }}
                             />
                         );
                     })}
