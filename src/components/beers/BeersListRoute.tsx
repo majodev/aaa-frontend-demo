@@ -5,12 +5,9 @@ import * as mui from "material-ui";
 import * as _ from "lodash";
 import { observer } from "mobx-react";
 
-import * as i18n from "../../i18n/util";
-import FullScreenProgress from "../common/FullScreenProgress";
-import * as CI from "../CI";
 import beerState from "../../state/beersState";
 
-interface IState {}
+interface IState { }
 
 @observer
 export default class Component extends React.Component<RouteComponentProps<null>, IState> {
@@ -25,15 +22,10 @@ export default class Component extends React.Component<RouteComponentProps<null>
 
     render() {
 
-        const { beers, loading, remainingRequests, requestCount } = beerState;
+        const { beers } = beerState;
 
         return (
             <div>
-                <FullScreenProgress show={loading} />
-                <CI.Header style={{ textAlign: "center", height: 110 }}>
-                    <h2><i18n.FormattedMessage id="path.beers" />&nbsp;</h2>
-                    <small>Remaining: {remainingRequests}, Made: {requestCount}</small>
-                </CI.Header>
                 <mui.List>
                     {_.map(beers, (beer) => {
                         return (
@@ -53,7 +45,6 @@ export default class Component extends React.Component<RouteComponentProps<null>
                     })}
                 </mui.List>
             </div>
-
         );
     }
 }

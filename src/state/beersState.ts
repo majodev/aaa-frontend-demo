@@ -8,6 +8,7 @@ class BeersState {
     @observable beers: IBeer[] = [];
     @observable remainingRequests: number = 0;
     @observable selectedBeer: IBeer | null = null;
+    @observable errorText: string | null = null;
 
     @observable private uriMap = new ObservableMap<boolean>();
 
@@ -27,41 +28,80 @@ class BeersState {
         this.beers = this.unionAndSortBeers(await this.getBeersApi());
     }
 
-    @action selectBeer = async (id: number) => {
+    @action selectBeer = async (idFromUrl: string | number) => {
 
-        let beer = _.find(this.beers, { id });
+        this.dismissError();
 
-        if (!beer) {
-            // we need to load the beer...
-            [ beer ] = await this.getBeersApi(id);
+        try {
+            const id = _.parseInt(idFromUrl.toString());
 
-            // update our collection.
-            this.beers = this.unionAndSortBeers([ beer ]);
+            if (_.isFinite(id) === false) {
+                throw new Error("Beers can only have numeric ids!");
+            }
+
+            let beer = _.find(this.beers, { id });
+
+            if (!beer) {
+                // we need to load the beer...
+                [beer] = await this.getBeersApi(id);
+
+                if (!beer) {
+                    throw new Error("Beer not found or currently unavailable!");
+                }
+
+                // update our collection.
+                this.beers = this.unionAndSortBeers([beer]);
+            }
+
+            this.selectedBeer = beer;
+        } catch (e) {
+            console.error("selectBeer error", e);
+            this.errorText = e.message;
         }
 
-        this.selectedBeer = beer;
     }
 
     @action deselectBeer = async () => {
         this.selectedBeer = null;
     }
 
+    @action dismissError = () => {
+        this.errorText = null;
+    }
+
     @action private async getBeersApi(id?: number): Promise<IBeer[]> {
+
+        this.dismissError();
+
         const uri = `https://api.punkapi.com/v2/beers${id ? "/" + id : ""}`;
 
-        if (this.uriMap.get(uri) === false) {
-            return this.beers; 
+        try {
+
+            if (this.uriMap.get(uri) === false) {
+                return this.beers;
+            }
+
+            this.uriMap.set(uri, true);
+
+            const res = await fetch(uri);
+
+            if (res.status !== 200) {
+                throw new Error("API returned unexpected response code: " + res.status);
+            }
+
+            const beers = await res.json();
+            this.remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
+
+            this.uriMap.set(uri, false);
+
+            return beers;
+
+        } catch (e) {
+            console.error("getBeersApi error", e);
+            this.uriMap.delete(uri);
+            this.errorText = e.message;
+            return []; // no beers.
         }
-
-        this.uriMap.set(uri, true);
-
-        const res = await fetch(uri);
-        const beers = await res.json();
-        this.remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
-
-        this.uriMap.set(uri, false);
-
-        return beers;
 
     }
 

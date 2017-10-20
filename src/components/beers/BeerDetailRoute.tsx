@@ -3,7 +3,6 @@ import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import { observer } from "mobx-react";
 
-import FullScreenProgress from "../common/FullScreenProgress";
 import beerState from "../../state/beersState";
 
 interface IState { }
@@ -12,7 +11,7 @@ interface IState { }
 export default class Component extends React.Component<RouteComponentProps<{ id: string }>, IState> {
 
     componentDidMount() {
-        beerState.selectBeer(Number.parseInt(this.props.match.params.id));
+        beerState.selectBeer(this.props.match.params.id);
     }
 
     componentWillUnmount() {
@@ -21,11 +20,10 @@ export default class Component extends React.Component<RouteComponentProps<{ id:
 
     render() {
 
-        const { selectedBeer, loading } = beerState;
+        const { selectedBeer } = beerState;
 
         return (
             <div>
-                <FullScreenProgress show={loading} />
                 <pre>{JSON.stringify(selectedBeer, null, 2)}</pre>
             </div>
         );
