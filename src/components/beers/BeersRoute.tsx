@@ -25,14 +25,14 @@ export default class Component extends React.Component<RouteComponentProps<null>
 
     render() {
 
-        const { beers, loading, remainingRequests } = beerState;
+        const { beers, loading, remainingRequests, requestCount } = beerState;
 
         return (
             <div>
                 <FullScreenProgress show={loading} />
                 <CI.Header style={{ textAlign: "center", height: 110 }}>
                     <h2><i18n.FormattedMessage id="path.beers" />&nbsp;</h2>
-                    <small>Remaining: {remainingRequests}</small>
+                    <small>Remaining: {remainingRequests}, Made: {requestCount}</small>
                 </CI.Header>
                 <mui.List>
                     {_.map(beers, (beer) => {

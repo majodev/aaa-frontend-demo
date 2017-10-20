@@ -1,14 +1,27 @@
-import { observable, action } from "mobx";
+import { observable, action, computed, ObservableMap } from "mobx";
 import * as _ from "lodash";
 
 import { IBeer } from "./IBeer";
 
 class BeersState {
 
-    @observable loading: boolean = false;
     @observable beers: IBeer[] = [];
     @observable remainingRequests: number = 0;
     @observable selectedBeer: IBeer | null = null;
+
+    @observable private uriMap = new ObservableMap<boolean>();
+
+    @computed get loading(): boolean {
+        return _.reduce(this.uriMap.entries(), (sum, [uri, value]) => {
+            return value || sum;
+        }, false);
+    }
+
+    @computed get requestCount(): number {
+        return _.reduce(this.uriMap.entries(), (sum, [uri, value]) => {
+            return value === false ? sum += 1 : sum;
+        }, 0);
+    }
 
     @action loadBeers = async () => {
         this.beers = this.unionAndSortBeers(await this.getBeersApi());
@@ -36,14 +49,17 @@ class BeersState {
     @action private async getBeersApi(id?: number): Promise<IBeer[]> {
         const uri = `https://api.punkapi.com/v2/beers${id ? "/" + id : ""}`;
 
-        this.loading = true;
+        if (this.uriMap.get(uri) === false) {
+            return this.beers; 
+        }
+
+        this.uriMap.set(uri, true);
 
         const res = await fetch(uri);
         const beers = await res.json();
-        
         this.remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
 
-        this.loading = false;
+        this.uriMap.set(uri, false);
 
         return beers;
 
