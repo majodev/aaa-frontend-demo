@@ -1,16 +1,18 @@
 import { observable, action, computed, ObservableMap } from "mobx";
+import { create, persist } from "mobx-persist";
 import * as _ from "lodash";
 
 import { IBeer } from "./IBeer";
 
 class BeersState {
 
-    @observable beers: IBeer[] = [];
-    @observable remainingRequests: number = 0;
+    @persist("list") @observable beers: IBeer[] = [];
+    @persist @observable remainingRequests: number = 0;
     @observable selectedBeer: IBeer | null = null;
     @observable errorText: string | null = null;
+    @observable isRehydrated: boolean = false;
 
-    @observable private uriMap = new ObservableMap<boolean>();
+    @persist("map") @observable private uriMap = new ObservableMap<boolean>();
 
     @computed get loading(): boolean {
         return _.reduce(this.uriMap.entries(), (sum, [uri, value]) => {
@@ -69,6 +71,12 @@ class BeersState {
         this.errorText = null;
     }
 
+    @action wipe = () => {
+        this.beers = [];
+        this.uriMap.clear();
+        this.remainingRequests = 0;
+    }
+
     @action private async getBeersApi(id?: number): Promise<IBeer[]> {
 
         this.dismissError();
@@ -112,5 +120,20 @@ class BeersState {
 
 }
 
+// persist this mobx state through localforage
+const hydrate = create({
+    storage: require("localforage"),
+});
+
+const beersState = new BeersState();
+
+hydrate("beersState", beersState).then(() => {
+    console.log("beerState: successfully rehydrated beerState");
+    beersState.isRehydrated = true;
+}).catch((e) => {
+    console.log("beerState: failed to rehydrate beerState");
+    beersState.isRehydrated = true;
+});
+
 // singleton, expose an instance by default
-export default new BeersState();
+export default beersState;

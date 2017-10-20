@@ -17,7 +17,11 @@ interface IState { }
 export default class Component extends React.Component<RouteComponentProps<any>, IState> {
     render() {
 
-        const { errorText, dismissError, loading, remainingRequests, requestCount } = beerState;
+        const { errorText, dismissError, loading, remainingRequests, requestCount, isRehydrated, wipe } = beerState;
+
+        if (isRehydrated === false) {
+            return null;
+        }
 
         return (
             <div>
@@ -26,7 +30,10 @@ export default class Component extends React.Component<RouteComponentProps<any>,
 
                 <CI.Header style={{ textAlign: "center", height: 110 }}>
                     <h2><i18n.FormattedMessage id="path.beers" />&nbsp;</h2>
-                    <small>Remaining: {remainingRequests}, Made: {requestCount}</small>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <small>Remaining: {remainingRequests}, Made: {requestCount}</small>
+                        <mui.FlatButton secondary onTouchTap={wipe} label="Wipe" />
+                    </div>
                 </CI.Header>
 
                 <mui.Snackbar
