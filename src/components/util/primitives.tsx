@@ -10,3 +10,5 @@ type MuiSVGIconConstructor = new () => mui.SvgIcon;
 
 export const IconDone: MuiSVGIconConstructor = require("material-ui/svg-icons/action/done").default;
 export const IconRestore: MuiSVGIconConstructor = require("material-ui/svg-icons/action/restore").default;
+export const IconLeft: MuiSVGIconConstructor = require("material-ui/svg-icons/navigation/chevron-left").default;
+export const IconRight: MuiSVGIconConstructor = require("material-ui/svg-icons/navigation/chevron-right").default;
