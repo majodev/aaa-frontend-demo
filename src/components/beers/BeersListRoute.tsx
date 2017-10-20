@@ -5,7 +5,9 @@ import * as mui from "material-ui";
 import * as _ from "lodash";
 import { observer } from "mobx-react";
 
+import * as primitives from "../util/primitives";
 import beerState from "../../state/beersState";
+import muiTheme from "../../muiTheme";
 
 interface IState { }
 
@@ -22,7 +24,7 @@ export default class Component extends React.Component<RouteComponentProps<null>
 
     render() {
 
-        const { beers } = beerState;
+        const { beers, isLikedBeer } = beerState;
 
         return (
             <div>
@@ -40,6 +42,7 @@ export default class Component extends React.Component<RouteComponentProps<null>
                                 }
                                 secondaryTextLines={2}
                                 onTouchTap={() => { this.props.history.push(`/beers/${beer.id}`); }}
+                                rightIcon={isLikedBeer(beer.id) ? <primitives.IconThumbUp color={muiTheme.palette!.accent1Color} style={{ top: 18 }} /> : undefined}
                             />
                         );
                     })}

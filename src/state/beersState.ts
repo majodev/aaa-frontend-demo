@@ -11,6 +11,7 @@ class BeersState {
     @observable selectedBeer: IBeer | null = null;
     @observable errorText: string | null = null;
     @observable isRehydrated: boolean = false;
+    @persist("list") @observable likedBeerIds: number[] = [];
 
     @persist("map") @observable private uriMap = new ObservableMap<boolean>();
 
@@ -24,6 +25,16 @@ class BeersState {
         return _.reduce(this.uriMap.entries(), (sum, [uri, value]) => {
             return value === false ? sum += 1 : sum;
         }, 0);
+    }
+
+    @computed get likedBeers(): IBeer[] {
+        return _.filter(this.beers, (beer) => {
+            return _.includes(this.likedBeerIds, beer.id);
+        });
+    }
+
+    isLikedBeer = (id: number): boolean => {
+        return _.find(this.likedBeers, { id }) ? true : false;
     }
 
     @action loadBeers = async () => {
@@ -63,6 +74,15 @@ class BeersState {
 
     }
 
+    @action toggleLikeBeer = (id: number) => {
+
+        if (this.isLikedBeer(id) === false) {
+            this.likedBeerIds.push(id);
+        } else {
+            this.likedBeerIds = _.remove(this.likedBeerIds, id);
+        }
+    }
+
     @action deselectBeer = async () => {
         this.selectedBeer = null;
     }
@@ -72,6 +92,7 @@ class BeersState {
     }
 
     @action wipe = () => {
+        this.likedBeerIds = [];
         this.beers = [];
         this.uriMap.clear();
         this.remainingRequests = 0;

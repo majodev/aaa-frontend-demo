@@ -40,7 +40,7 @@ export default class Component extends React.Component<IProps, IState> {
 
     render() {
 
-        const { selectedBeer } = beerState;
+        const { selectedBeer, toggleLikeBeer, isLikedBeer } = beerState;
 
         let beerDetail = null;
 
@@ -73,6 +73,13 @@ export default class Component extends React.Component<IProps, IState> {
                         <h5>Tips</h5>
                         <p>{selectedBeer.brewers_tips}</p>
                     </mui.CardText>
+                    <mui.CardActions>
+                        <mui.FlatButton
+                            onTouchTap={toggleLikeBeer.bind(this, selectedBeer.id)}
+                            secondary={isLikedBeer(selectedBeer.id) ? true : false}
+                            icon={<primitives.IconThumbUp />}
+                        />
+                    </mui.CardActions>
                 </mui.Card>
             );
         }
