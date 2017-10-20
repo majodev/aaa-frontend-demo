@@ -3,49 +3,29 @@ import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import * as mui from "material-ui";
 import * as _ from "lodash";
+import { observer } from "mobx-react";
 
 import * as i18n from "../../i18n/util";
 import FullScreenProgress from "../common/FullScreenProgress";
-import { IBeer } from "./IBeer";
 import * as CI from "../CI";
+import beerState from "../../state/beersState";
 
-interface IState {
-    remainingRequests: number;
-    loading: boolean;
-    beers: IBeer[];
-}
+interface IState {}
 
+@observer
 export default class Component extends React.Component<RouteComponentProps<null>, IState> {
 
     constructor(props: RouteComponentProps<null>) {
         super(props);
-
-        this.state = {
-            remainingRequests: 0,
-            loading: true,
-            beers: []
-        };
     }
 
     componentDidMount() {
-        this.fetchBeers();
-    }
-
-    fetchBeers = async () => {
-        const res = await fetch(`https://api.punkapi.com/v2/beers`);
-        const beers: IBeer[] = await res.json();
-        const remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
-
-        this.setState({
-            loading: false,
-            remainingRequests,
-            beers
-        });
+        beerState.loadBeers();
     }
 
     render() {
 
-        const { beers, loading, remainingRequests } = this.state;
+        const { beers, loading, remainingRequests } = beerState;
 
         return (
             <div>

@@ -16,6 +16,8 @@
     "intl": "1.2.5",
     "lodash": "^4.17.4",
     "material-ui": "0.18.7",
+    "mobx": "^3.3.1",
+    "mobx-react": "^4.3.3",
     "prop-types": "15.6.0",
     "react": "15.6.2",
     "react-animations": "0.1.0",
