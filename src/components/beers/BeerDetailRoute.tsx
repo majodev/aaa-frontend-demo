@@ -15,6 +15,10 @@ export default class Component extends React.Component<RouteComponentProps<{ id:
         beerState.selectBeer(Number.parseInt(this.props.match.params.id));
     }
 
+    componentWillUnmount() {
+        beerState.deselectBeer();
+    }
+
     render() {
 
         const { selectedBeer, loading } = beerState;

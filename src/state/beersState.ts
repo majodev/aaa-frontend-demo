@@ -11,43 +11,47 @@ class BeersState {
     @observable selectedBeer: IBeer | null = null;
 
     @action loadBeers = async () => {
-        if (this.loading || this.beers.length > 0) {
-            // noop if we are loading or have already loaded our beers
-            return;
-        }
-
-        this.loading = true;
-        
-        const res = await fetch(`https://api.punkapi.com/v2/beers`);
-        this.beers = await res.json();
-        this.remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
-
-        this.loading = false;
+        this.beers = this.unionAndSortBeers(await this.getBeersApi());
     }
 
     @action selectBeer = async (id: number) => {
 
-        const beer = _.find(this.beers, { id });
+        let beer = _.find(this.beers, { id });
 
-        if (beer) {
-            // beer was already loaded, noop.
-            this.selectedBeer = beer;
-            return;
+        if (!beer) {
+            // we need to load the beer...
+            [ beer ] = await this.getBeersApi(id);
+
+            // update our collection.
+            this.beers = this.unionAndSortBeers([ beer ]);
         }
 
-        this.loading = true;
-        const res = await fetch(`https://api.punkapi.com/v2/beers/${id}`);
-        const [ newBeer ] = await res.json();
-        this.remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
-        
-        // update our collection.
-        this.beers = [
-            ...this.beers,
-            newBeer
-        ];
+        this.selectedBeer = beer;
+    }
 
-        this.selectedBeer = newBeer;
+    @action deselectBeer = async () => {
+        this.selectedBeer = null;
+    }
+
+    @action private async getBeersApi(id?: number): Promise<IBeer[]> {
+        const uri = `https://api.punkapi.com/v2/beers${id ? "/" + id : ""}`;
+
+        this.loading = true;
+
+        const res = await fetch(uri);
+        const beers = await res.json();
+        
+        this.remainingRequests = Number.parseInt(res.headers.get("x-ratelimit-remaining") as string);
+
         this.loading = false;
+
+        return beers;
+
+    }
+
+    private unionAndSortBeers(newBeers: IBeer[]): IBeer[] {
+        const unioned = _.unionWith(this.beers, newBeers, (a, b) => { return a.id === b.id; });
+        return _.sortBy(unioned, ["name"]);
     }
 
 }
