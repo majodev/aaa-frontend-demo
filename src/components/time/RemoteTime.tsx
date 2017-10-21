@@ -44,7 +44,7 @@ export default class Component extends React.Component<IProps, IState> {
             loading: true
         });
 
-        const res = await fetch(config.API_BASE_URL);
+        const res = await fetch("http://date.jsontest.com/");
         const data: IJSONResponse = await res.json();
 
         this.setState({

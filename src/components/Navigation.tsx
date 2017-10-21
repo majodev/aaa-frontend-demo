@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import * as i18n from "../i18n/util";
 import MenuItemLink from "./common/MenuItemLink";
 import beerState from "../state/beersState";
+import authState from "../state/authState";
 
 type IProps = i18n.InjectedIntlProps & Partial<RouteComponentProps<any>>;
 interface IState {
@@ -50,12 +51,25 @@ export default class Component extends React.Component<IProps, IState> {
         const routeText = intl!.formatMessage({ id: pathnameToI18NString(location!.pathname) });
         const { likedBeers } = beerState;
 
+        const authenticationComponent = authState.isAuthenticated ? (
+            <small style={{ textAlign: "right", color: "white", paddingTop: 16 }}>Authenticated as<br />{authState.userUid}</small>
+        ) : (
+                <mui.FlatButton
+                    style={{ marginTop: 14 }}
+                    secondary
+                    label="Authenticate"
+                    onTouchTap={authState.getNewGuestAccessToken}
+                />
+            );
+
         return (
             <div>
                 <mui.AppBar
                     title={routeText}
                     onLeftIconButtonTouchTap={this.handleToggle}
-                />
+                >
+                    {authenticationComponent}
+                </mui.AppBar>
                 <mui.Drawer
                     docked={false}
                     width={200}
