@@ -6,7 +6,7 @@ import * as mui from "material-ui";
 const StyledLink = styled(Link) `
     text-decoration: none;
 `;
-interface IProps {
+interface IProps extends mui.MenuItemProps {
     to: string;
     onClick?: () => void; // can be optional
     title?: string; // can be optional first used, then children
@@ -14,9 +14,18 @@ interface IProps {
 }
 
 export default function (props: IProps) {
+
+    const {
+        to,
+        title,
+        children,
+        onClick,
+        ...rest
+    } = props;
+
     return (
         <StyledLink to={props.to}>
-            <mui.MenuItem onClick={props.onClick}>{props.title || props.children}</mui.MenuItem>
+            <mui.MenuItem onClick={props.onClick} {...rest} >{props.title || props.children}</mui.MenuItem>
         </StyledLink>
     );
 }

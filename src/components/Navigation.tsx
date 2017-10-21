@@ -2,9 +2,12 @@ import * as React from "react";
 import styled from "styled-components";
 import * as mui from "material-ui";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+import { observer } from "mobx-react";
+import * as _ from "lodash";
 
 import * as i18n from "../i18n/util";
 import MenuItemLink from "./common/MenuItemLink";
+import beerState from "../state/beersState";
 
 type IProps = i18n.InjectedIntlProps & Partial<RouteComponentProps<any>>;
 interface IState {
@@ -29,6 +32,7 @@ function pathnameToI18NString(pathname: string): i18n.IDS {
 
 @i18n.injectIntl
 @withRouter
+@observer
 export default class Component extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
@@ -44,6 +48,7 @@ export default class Component extends React.Component<IProps, IState> {
         const { intl, location } = this.props!;
         const brandText = intl!.formatMessage({ id: "nav.brand" });
         const routeText = intl!.formatMessage({ id: pathnameToI18NString(location!.pathname) });
+        const { likedBeers } = beerState;
 
         return (
             <div>
@@ -67,6 +72,21 @@ export default class Component extends React.Component<IProps, IState> {
                     <MenuItemLink onClick={this.handleClose} to="/beers">
                         <i18n.FormattedMessage id="path.beers" />
                     </MenuItemLink>
+                    {likedBeers.length > 0 ? (
+                        <mui.Subheader>Liked Beers</mui.Subheader>
+                    ) : null}
+                    {_.map(likedBeers, (beer) => {
+                        return (
+                            <MenuItemLink
+                                style={{ fontSize: "80%", paddingLeft: 10, overflowX: "hidden" }}
+                                key={beer.id}
+                                onClick={this.handleClose}
+                                to={`/beers/${beer.id}`}
+                            >
+                                {beer.name}
+                            </MenuItemLink>
+                        );
+                    })}
                 </mui.Drawer>
             </div>
         );
