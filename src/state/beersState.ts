@@ -3,6 +3,8 @@ import { create, persist } from "mobx-persist";
 import * as _ from "lodash";
 
 import { IBeer } from "./IBeer";
+import authState from "./authState";
+import * as config from "../config";
 
 class BeersState {
 
@@ -13,6 +15,7 @@ class BeersState {
     @observable isRehydrated: boolean = false;
     @persist("list") @observable likedBeerIds: number[] = [];
     @persist("map") @observable commentsMap = new ObservableMap<string>();
+    @observable isUploading: boolean = false;
 
     @persist("map") @observable private uriMap = new ObservableMap<boolean>();
 
@@ -30,7 +33,7 @@ class BeersState {
     @computed get loading(): boolean {
         return _.reduce(this.uriMap.entries(), (sum, [uri, value]) => {
             return value || sum;
-        }, false);
+        }, this.isUploading);
     }
 
     @computed get requestCount(): number {
@@ -60,6 +63,8 @@ class BeersState {
             this.commentsMap.delete(`${id}`);
         }
 
+        // save state on server.
+        this.uploadStateToUserProfile();
     }
 
     @action loadBeers = async () => {
@@ -111,6 +116,9 @@ class BeersState {
             // remove mutates array, returns the removed entries!
             _.remove(this.likedBeerIds, (item) => item === id);
         }
+
+        // save state on server.
+        this.uploadStateToUserProfile();
     }
 
     @action deselectBeer = async () => {
@@ -166,6 +174,41 @@ class BeersState {
             return []; // no beers.
         }
 
+    }
+
+    @action private async uploadStateToUserProfile() {
+        if (authState.isAuthenticated === false) {
+            // noop, we are not authenticated with the server and thus cannot save our changes.
+        }
+
+        this.isUploading = true;
+
+        try {
+            const res = await fetch(`${config.API_BASE_URL}/app/v1/user/profile`, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": `Bearer ${authState.credentials!.accessToken}`
+                },
+                body: JSON.stringify({
+                    data: {
+                        commentsMap: this.commentsMap.toJS(),
+                        likedBeerIds: this.likedBeerIds
+                    }
+                })
+            });
+
+            if (!res.ok) {
+                throw Error(`${res.status}: ${res.statusText}`);
+            }
+
+            console.log("uploadStateToUserProfile: successfully uploaded information", await res.json());
+
+        } catch (e) {
+            console.error("saveBeersStateToUserProfile error", e);
+            this.errorText = e.message;
+        }
+
+        this.isUploading = false;
     }
 
     private unionAndSortBeers(newBeers: IBeer[]): IBeer[] {
