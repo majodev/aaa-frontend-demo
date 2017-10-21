@@ -33,6 +33,8 @@
     "styled-components": "1.4.6"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "aaa-react-scripts-ts start",
     "build": "aaa-react-scripts-ts build",
     "test": "aaa-react-scripts-ts test --env=jsdom",
