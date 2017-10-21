@@ -7,6 +7,7 @@ import * as _ from "lodash";
 
 import * as primitives from "../util/primitives";
 import beerState from "../../state/beersState";
+import BeerCommentForm from "./BeerCommentForm";
 
 type IProps = RouteComponentProps<{ id: string }>;
 interface IState { }
@@ -72,6 +73,8 @@ export default class Component extends React.Component<IProps, IState> {
                         <p>{selectedBeer.description}</p>
                         <h5>Tips</h5>
                         <p>{selectedBeer.brewers_tips}</p>
+                        <h5>My comment</h5>
+                        <BeerCommentForm beerId={selectedBeer.id} />
                     </mui.CardText>
                     <mui.CardActions>
                         <mui.FlatButton
