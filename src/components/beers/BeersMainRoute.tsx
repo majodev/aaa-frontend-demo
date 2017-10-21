@@ -11,10 +11,30 @@ import BeersRoute from "./BeersListRoute";
 import BeerDetailRoute from "./BeerDetailRoute";
 import beerState from "../../state/beersState";
 
-interface IState { }
+type IProps = RouteComponentProps<any>;
+interface IState {
+    isWipeDialogOpened: boolean;
+}
 
 @observer
-export default class Component extends React.Component<RouteComponentProps<any>, IState> {
+export default class Component extends React.Component<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            isWipeDialogOpened: false
+        };
+    }
+
+    handleOpen = () => {
+        this.setState({ isWipeDialogOpened: true });
+    }
+
+    handleClose = () => {
+        this.setState({ isWipeDialogOpened: false });
+    }
+
     render() {
 
         const { errorText, dismissError, loading, remainingRequests, requestCount, isRehydrated, wipe, likedBeers } = beerState;
@@ -32,7 +52,7 @@ export default class Component extends React.Component<RouteComponentProps<any>,
                     <h2><i18n.FormattedMessage id="path.beers" />&nbsp;<small>({likedBeers.length} liked)</small></h2>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <small>Remaining: {remainingRequests}, Made: {requestCount}</small>
-                        <mui.FlatButton secondary onTouchTap={wipe} label="Wipe" />
+                        <mui.FlatButton secondary onTouchTap={this.handleOpen} label="Wipe" />
                     </div>
                 </CI.Header>
 
@@ -44,6 +64,30 @@ export default class Component extends React.Component<RouteComponentProps<any>,
                     onActionTouchTap={dismissError}
                     onRequestClose={dismissError}
                 />
+
+                <mui.Dialog
+                    title="Wipe"
+                    actions={[
+                        <mui.FlatButton
+                            key="cancel"
+                            label="Cancel"
+                            keyboardFocused={true}
+                            primary={true}
+                            onClick={this.handleClose}
+                        />,
+                        <mui.FlatButton
+                            key="ok"
+                            label="OK"
+                            primary={true}
+                            onClick={() => { wipe(); this.handleClose(); }}
+                        />
+                    ]}
+                    modal={false}
+                    open={this.state.isWipeDialogOpened}
+                    onRequestClose={this.handleClose}
+                >
+                    Should we really wipe the local beer cache?
+                </mui.Dialog>
 
                 {/* Child Routes */}
                 <Route exact path="/beers" component={BeersRoute} />
