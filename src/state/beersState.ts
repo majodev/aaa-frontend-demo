@@ -1,4 +1,4 @@
-import { observable, action, computed, ObservableMap } from "mobx";
+import { observable, action, computed, ObservableMap, autorun } from "mobx";
 import { create, persist } from "mobx-persist";
 import * as _ from "lodash";
 
@@ -14,6 +14,17 @@ class BeersState {
     @persist("list") @observable likedBeerIds: number[] = [];
 
     @persist("map") @observable private uriMap = new ObservableMap<boolean>();
+
+    private disableAutofetchLikedBeers = autorun(() => {
+        if (this.likedBeerIds.length === this.likedBeers.length) {
+            // noop, all beers were loaded.
+            return;
+        }
+
+        Promise.all(_.map(this.likedBeerIds, (id) => {
+            return this.loadBeer(id);
+        }));
+    });
 
     @computed get loading(): boolean {
         return _.reduce(this.uriMap.entries(), (sum, [uri, value]) => {
@@ -41,6 +52,24 @@ class BeersState {
         this.beers = this.unionAndSortBeers(await this.getBeersApi());
     }
 
+    @action loadBeer = async (id: number) => {
+        let beer = _.find(this.beers, { id });
+
+        if (!beer) {
+            // we need to load the beer...
+            [beer] = await this.getBeersApi(id);
+
+            if (!beer) {
+                throw new Error("Beer not found or currently unavailable!");
+            }
+
+            // update our collection.
+            this.beers = this.unionAndSortBeers([beer]);
+        }
+
+        return beer;
+    }
+
     @action selectBeer = async (idFromUrl: string | number) => {
 
         this.dismissError();
@@ -52,21 +81,7 @@ class BeersState {
                 throw new Error("Beers can only have numeric ids!");
             }
 
-            let beer = _.find(this.beers, { id });
-
-            if (!beer) {
-                // we need to load the beer...
-                [beer] = await this.getBeersApi(id);
-
-                if (!beer) {
-                    throw new Error("Beer not found or currently unavailable!");
-                }
-
-                // update our collection.
-                this.beers = this.unionAndSortBeers([beer]);
-            }
-
-            this.selectedBeer = beer;
+            this.selectedBeer = await this.loadBeer(id);
         } catch (e) {
             console.error("selectBeer error", e);
             this.errorText = e.message;
@@ -79,7 +94,8 @@ class BeersState {
         if (this.isLikedBeer(id) === false) {
             this.likedBeerIds.push(id);
         } else {
-            this.likedBeerIds = _.remove(this.likedBeerIds, id);
+            // remove mutates array, returns the removed entries!
+            _.remove(this.likedBeerIds, (item) => item === id);
         }
     }
 
@@ -92,7 +108,10 @@ class BeersState {
     }
 
     @action wipe = () => {
-        this.likedBeerIds = [];
+
+        // never wipe likedBeerIds
+        // this.likedBeerIds = [];
+
         this.beers = [];
         this.uriMap.clear();
         this.remainingRequests = 0;
