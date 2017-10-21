@@ -6,6 +6,12 @@ import { IBeer } from "./IBeer";
 import authState from "./authState";
 import * as config from "../config";
 
+type IBeersInfo = {
+    globalLikes: { [id: string]: number },
+    globalComments: { [id: string]: { user: string, comment: string }[] }
+};
+
+
 class BeersState {
 
     @persist("list") @observable beers: IBeer[] = [];
@@ -16,6 +22,7 @@ class BeersState {
     @persist("list") @observable likedBeerIds: number[] = [];
     @persist("map") @observable commentsMap = new ObservableMap<string>();
     @observable isUploading: boolean = false;
+    @persist("object") @observable beersInfo: IBeersInfo | null;
 
     @persist("map") @observable private uriMap = new ObservableMap<boolean>();
 
@@ -91,6 +98,8 @@ class BeersState {
 
     @action selectBeer = async (idFromUrl: string | number) => {
 
+        this.refreshBeersInfo();
+
         this.dismissError();
 
         try {
@@ -140,6 +149,18 @@ class BeersState {
         this.remainingRequests = 0;
     }
 
+    @action refreshBeersInfo = async () => {
+
+        try {
+            const res = await fetch(`${config.API_BASE_URL}/app/v1/beers-info`);
+            this.beersInfo = await res.json();
+            console.log("refreshBeersInfo");
+        } catch (e) {
+            console.error("refreshBeersInfo error", e);
+            this.errorText = `refreshBeersInfo error: ${e.message}`;
+        }
+    }
+
     @action private async getBeersApi(id?: number): Promise<IBeer[]> {
 
         this.dismissError();
@@ -179,6 +200,7 @@ class BeersState {
     @action private async uploadStateToUserProfile() {
         if (authState.isAuthenticated === false) {
             // noop, we are not authenticated with the server and thus cannot save our changes.
+            return;
         }
 
         this.isUploading = true;
@@ -209,6 +231,8 @@ class BeersState {
         }
 
         this.isUploading = false;
+
+        this.refreshBeersInfo();
     }
 
     private unionAndSortBeers(newBeers: IBeer[]): IBeer[] {

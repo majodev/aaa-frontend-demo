@@ -19,6 +19,7 @@ export default class Component extends React.Component<RouteComponentProps<null>
     }
 
     componentDidMount() {
+        beerState.refreshBeersInfo();
         beerState.loadBeers();
     }
 

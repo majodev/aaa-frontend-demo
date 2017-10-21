@@ -44,8 +44,35 @@ export default class Component extends React.Component<IProps, IState> {
         const { selectedBeer, toggleLikeBeer, isLikedBeer } = beerState;
 
         let beerDetail = null;
+        let allComments: any = (
+            <small>(no comments)</small>
+        );
+        let likedCount = (
+            <small>(no global likes)</small>
+        );
 
         if (selectedBeer) {
+
+            if (beerState.beersInfo) {
+                if (beerState.beersInfo.globalComments[selectedBeer.id]) {
+                    const beerComments = beerState.beersInfo.globalComments[selectedBeer.id];
+
+                    allComments = _.map(beerComments, (comment) => {
+                        return (
+                            <p key={`${selectedBeer.id}-${comment.user}`}><small>{comment.user}</small>: {comment.comment}</p>
+                        );
+                    });
+                }
+
+                if (_.isNumber(beerState.beersInfo.globalLikes[selectedBeer.id])) {
+                    const likes = beerState.beersInfo.globalLikes[selectedBeer.id];
+
+                    likedCount = (
+                        <small>({likes} global likes)</small>
+                    );
+                }
+            }
+
             beerDetail = (
                 <mui.Card>
                     <mui.CardHeader
@@ -75,12 +102,15 @@ export default class Component extends React.Component<IProps, IState> {
                         <p>{selectedBeer.brewers_tips}</p>
                         <h5>My comment</h5>
                         <BeerCommentForm beerId={selectedBeer.id} />
+                        <h5>All comments</h5>
+                        {allComments}
                     </mui.CardText>
                     <mui.CardActions>
                         <mui.FlatButton
                             onTouchTap={toggleLikeBeer.bind(this, selectedBeer.id)}
                             secondary={isLikedBeer(selectedBeer.id) ? true : false}
                             icon={<primitives.IconThumbUp />}
+                            label={likedCount}
                         />
                     </mui.CardActions>
                 </mui.Card>
