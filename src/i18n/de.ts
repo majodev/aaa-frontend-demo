@@ -1,6 +1,6 @@
 const locale = {
-    "main.welcomeText": `Willkommen bei React`,
-    "main.subText": `Beginne damit {location} anzupassen und speichere zum neuladen.`,
+    "main.welcomeText": `aaa-frontend-demo`,
+    "main.subText": `Ein allaboutapps Demo-Projekt für Workshops`,
     "nav.brand": `Marke`,
     "path.home": `Startseite`,
     "path.beers": `Biere`,

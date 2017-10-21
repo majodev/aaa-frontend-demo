@@ -4,7 +4,7 @@ import styled from "styled-components";
 import * as i18n from "../i18n/util";
 import * as animations from "./util/animations";
 import * as CI from "./CI";
-import RemoteTime from "./time/RemoteTime";
+// import RemoteTime from "./time/RemoteTime";
 
 const Wrapper = styled.div`
     text-align: center;
@@ -33,7 +33,7 @@ export default class Component extends React.Component<IProps, IState> {
                         values={{ location: (<code>src/components/Main.tsx</code>) }}
                     />
                 </IntroParagraph>
-                <RemoteTime />
+                {/* <RemoteTime /> */}
             </Wrapper>
         );
     }

@@ -4,7 +4,7 @@ This demo project was scaffolded through [aaa-create-react-app-typescript@v2.7.0
 
 Used during workshops for customers to get an idea of typical react frontend related concerns / provide an easy way into web frontend development.
 
-> TODO: add link to sample app notes documenting each commit.
+**[See aaa-web-workshops](https://github.com/majodev/aaa-web-workshops)**
 
 ## Typical Dependencies at all about apps
 
