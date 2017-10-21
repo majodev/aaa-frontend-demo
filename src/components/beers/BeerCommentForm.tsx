@@ -22,8 +22,10 @@ export default class Component extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
+        const initialComment = beerState.commentsMap.get(`${props.beerId}`);
+
         this.state = {
-            commentText: "",
+            commentText: initialComment ? initialComment : "",
             errorText: null,
             changed: false
         };
@@ -31,8 +33,11 @@ export default class Component extends React.Component<IProps, IState> {
 
     componentWillReceiveProps(nextProps: IProps) {
         if (this.props.beerId !== nextProps.beerId) {
+
+            const otherComment = beerState.commentsMap.get(`${nextProps.beerId}`);
+
             this.setState({
-                commentText: "",
+                commentText: otherComment ? otherComment : "",
                 errorText: null,
                 changed: false
             });
@@ -70,8 +75,10 @@ export default class Component extends React.Component<IProps, IState> {
         if (this.state.commentText.length === 0) {
             // no comment, delete it if this is the case!
             console.log("submit (delete comment)!");
+            beerState.setComment(this.props.beerId, null);
         } else {
             console.log("submit:", this.state.commentText);
+            beerState.setComment(this.props.beerId, this.state.commentText);
         }
 
         this.setState({

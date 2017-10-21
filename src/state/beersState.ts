@@ -12,6 +12,7 @@ class BeersState {
     @observable errorText: string | null = null;
     @observable isRehydrated: boolean = false;
     @persist("list") @observable likedBeerIds: number[] = [];
+    @persist("map") @observable commentsMap = new ObservableMap<string>();
 
     @persist("map") @observable private uriMap = new ObservableMap<boolean>();
 
@@ -46,6 +47,19 @@ class BeersState {
 
     isLikedBeer = (id: number): boolean => {
         return _.find(this.likedBeers, { id }) ? true : false;
+    }
+
+    @action setComment = (id: number, comment: string | null) => {
+        if (!_.find(this.beers, { id })) {
+            throw new Error("You are not allowed to setComment on beers not within our cache!");
+        }
+
+        if (comment) {
+            this.commentsMap.set(`${id}`, comment);
+        } else {
+            this.commentsMap.delete(`${id}`);
+        }
+
     }
 
     @action loadBeers = async () => {
@@ -109,8 +123,9 @@ class BeersState {
 
     @action wipe = () => {
 
-        // never wipe likedBeerIds
+        // never wipe likedBeerIds or comments
         // this.likedBeerIds = [];
+        // this.commentsMap.clear();
 
         this.beers = [];
         this.uriMap.clear();
