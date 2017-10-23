@@ -1,8 +1,8 @@
 const locale = {
     "main.welcomeText": `Willkommen bei React`,
     "main.subText": `Beginne damit {location} anzupassen und speichere zum neuladen.`,
-    "nav.home": "Startseite",
-    "nav.beers": "Biere"
+    "path.home": "Startseite",
+    "path.beers": "Biere"
 };
 
 export type IAvailableI18nIds = typeof locale;
