@@ -1,13 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import * as mui from "material-ui";
 
 import * as i18n from "../i18n/util";
-
-const StyledLink = styled(Link) `
-    text-decoration: none;
-`;
+import MenuItemLink from "./common/MenuItemLink";
 
 interface IProps { }
 interface IState {
@@ -40,8 +36,10 @@ export default class Component extends React.Component<IProps, IState> {
                     open={this.state.open}
                     onRequestChange={(open) => this.setState({ open })}
                 >
-                    <StyledLink to="/"><mui.MenuItem onClick={this.handleClose}>Home</mui.MenuItem></StyledLink>
-                    <StyledLink to="/beers"><mui.MenuItem onClick={this.handleClose}>Beers</mui.MenuItem></StyledLink>
+                    <MenuItemLink to="/" onClick={this.handleClose} title="Home" />
+                    {/* <StyledLink to="/"><mui.MenuItem onClick={this.handleClose}>Home</mui.MenuItem></StyledLink> */}
+                    <MenuItemLink to="/beers" onClick={this.handleClose} title="Beers" />
+                    {/* <StyledLink to="/beers"><mui.MenuItem onClick={this.handleClose}>Beers</mui.MenuItem></StyledLink> */}
                 </mui.Drawer>
             </div>
         );
