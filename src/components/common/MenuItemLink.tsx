@@ -10,13 +10,14 @@ const StyledLink = styled(Link) `
 interface IProps {
     to: string;
     onClick: () => void;
-    title: string;
+    title?: string;
+    children?: React.ReactNode;
 }
 
 export default function (props: IProps) {
     return (
         <StyledLink to={props.to}>
-            <mui.MenuItem onClick={props.onClick}>{props.title}</mui.MenuItem>
+            <mui.MenuItem onClick={props.onClick}>{props.children || props.title}</mui.MenuItem>
         </StyledLink>
     );
 }

@@ -5,11 +5,12 @@ import * as mui from "material-ui";
 import * as i18n from "../i18n/util";
 import MenuItemLink from "./common/MenuItemLink";
 
-interface IProps { }
+type IProps = {} & i18n.InjectedIntlProps;
 interface IState {
     open: boolean;
 }
 
+@i18n.injectIntl
 export default class Component extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
@@ -24,6 +25,7 @@ export default class Component extends React.Component<IProps, IState> {
     handleClose = () => this.setState({ open: false });
 
     render() {
+
         return (
             <div>
                 <mui.AppBar
@@ -36,10 +38,12 @@ export default class Component extends React.Component<IProps, IState> {
                     open={this.state.open}
                     onRequestChange={(open) => this.setState({ open })}
                 >
-                    <MenuItemLink to="/" onClick={this.handleClose} title="Home" />
-                    {/* <StyledLink to="/"><mui.MenuItem onClick={this.handleClose}>Home</mui.MenuItem></StyledLink> */}
-                    <MenuItemLink to="/beers" onClick={this.handleClose} title="Beers" />
-                    {/* <StyledLink to="/beers"><mui.MenuItem onClick={this.handleClose}>Beers</mui.MenuItem></StyledLink> */}
+                    <MenuItemLink to="/" onClick={this.handleClose}>
+                        <i18n.FormattedMessage id="nav.home" />
+                    </MenuItemLink>
+
+                    <MenuItemLink to="/beers" onClick={this.handleClose} title={this.props.intl!.formatMessage({ id: "nav.beers" })} />
+
                 </mui.Drawer>
             </div>
         );
