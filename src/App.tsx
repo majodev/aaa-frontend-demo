@@ -8,6 +8,7 @@ import BeersRoute from "./components/beers/Beers";
 import muiTheme from "./muiTheme";
 import baseLocale from "./i18n/en";
 import Main from "./components/Main";
+import Navigation from "./components/Navigation";
 
 // Needed for onTouchTap click handlers 
 // see http://stackoverflow.com/a/34015469/988941
@@ -20,10 +21,7 @@ class App extends React.Component {
                 <IntlProvider locale="en" messages={baseLocale}>
                     <Router>
                         <div>
-                            <ul>
-                                <li><Link to="/">Home</Link></li>
-                                <li><Link to="/beers">Beers</Link></li>
-                            </ul>
+                            <Navigation />
                             <Route exact path="/" component={Main} />
                             <Route path="/beers" component={BeersRoute} />
                         </div>
