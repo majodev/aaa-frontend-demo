@@ -33,6 +33,14 @@ export default class Component extends React.Component<IProps, IState> {
 
     }
 
+    componentDidMount() {
+        this.fetchRemoteTime();
+    }
+
+    componentWillReceiveProps(nextProps: IProps) {
+        console.log("componentWillReceiveProps", nextProps);
+    }
+
     fetchRemoteTime = async () => {
 
         this.setState({

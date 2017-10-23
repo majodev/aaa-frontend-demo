@@ -2,7 +2,7 @@ import * as React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import * as injectTapEventPlugin from "react-tap-event-plugin";
 import { IntlProvider } from "react-intl";
-import { MemoryRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 
 import BeersRoute from "./components/beers/Beers";
 import muiTheme from "./muiTheme";
