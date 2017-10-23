@@ -41,7 +41,12 @@ export default class Component extends React.Component<IProps, IState> {
         console.log("componentWillReceiveProps", nextProps);
     }
 
+    // NOT: async fetchRemoteTime(this: Component | any) {
     fetchRemoteTime = async () => {
+
+        if (!(this instanceof Component)) {
+            return;
+        }
 
         this.setState({
             loading: true
