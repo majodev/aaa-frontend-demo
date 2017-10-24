@@ -2,9 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import * as mui from "material-ui";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+import { observer } from "mobx-react";
 
 import * as i18n from "../i18n/util";
 import MenuItemLink from "./common/MenuItemLink";
+import { beersState } from "../state/beersState";
 
 type IProps = {} & i18n.InjectedIntlProps & Partial<RouteComponentProps<any>>;
 interface IState {
@@ -13,6 +15,7 @@ interface IState {
 
 @withRouter
 @i18n.injectIntl
+@observer
 export default class Component extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
@@ -31,7 +34,9 @@ export default class Component extends React.Component<IProps, IState> {
         const { intl } = this.props;
         const { open } = this.state;
 
-        const formattedText = intl!.formatMessage({ id: getI18NKeyFromPathName(this.props.location!.pathname) });
+        const formattedText = beersState.selectedBeer
+            ? beersState.selectedBeer.name
+            : intl!.formatMessage({ id: getI18NKeyFromPathName(this.props.location!.pathname) });
 
         return (
             <div>
