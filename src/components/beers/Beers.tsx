@@ -1,5 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
+import * as mui from "material-ui";
+import * as _ from "lodash";
 
 import { IBeer } from "./IBeer";
 import * as i18n from "../../i18n/util";
@@ -41,13 +43,21 @@ export default class Component extends React.Component<IProps, IState> {
         return (
             <div>
                 <h1>Beers {this.state.remainingRequests}</h1>
-                <ul>
-                    {this.state.beers.map((beer) => {
+                <mui.List>
+                    {_.map(this.state.beers, (beer) => {
                         return (
-                            <li key={beer.id}>{beer.name}</li>
+                            <mui.ListItem
+                                key={beer.id}
+                                primaryText={beer.name}
+                                secondaryText={<p>
+                                    <span style={{ color: "#111" }}>{beer.tagline}</span><br />{beer.description}
+                                </p>
+                                }
+                                secondaryTextLines={2}
+                            />
                         );
                     })}
-                </ul>
+                </mui.List>
             </div>
         );
     }
