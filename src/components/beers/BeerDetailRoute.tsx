@@ -12,10 +12,18 @@ interface IState { }
 @observer
 export default class Component extends React.Component<IProps, IState> {
 
+    // initalize!
     componentDidMount() {
         beersState.selectBeer(this.props.match.params.id);
 
         window.scrollTo(0, 0);
+    }
+
+    // update!
+    componentWillReceiveProps(nextProps: IProps) {
+        if (this.props.match.params.id !== nextProps.match.params.id) {
+            beersState.selectBeer(nextProps.match.params.id);
+        }
     }
 
     componentWillUnmount() {
