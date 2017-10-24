@@ -1,14 +1,17 @@
 import { observable, action } from "mobx";
 import * as _ from "lodash";
+import { persist, create } from "mobx-persist";
+import * as localForage from "localforage";
 
 import { IBeer } from "./IBeer";
 
 
 class BeersState {
-    @observable remainingRequests: number = -1;
-    @observable beers: IBeer[] = [];
+    @persist @observable remainingRequests: number = -1;
+    @persist("list") @observable beers: IBeer[] = [];
     @observable loading: boolean = false;
     @observable selectedBeer: IBeer | null = null;
+    @observable isHydrated: boolean = false;
 
     @action async fetchBeers() {
         this.loading = true;
@@ -47,5 +50,22 @@ class BeersState {
     }
 }
 
+const hydrate = create({
+    storage: localForage,
+});
+
 export const beersState = new BeersState();
+
+hydrate("beersState", beersState).then(() => {
+
+    beersState.isHydrated = true;
+    console.log("beersState hydrated");
+
+}).catch((e) => {
+
+    console.error("beersState hydrated error", e);
+    beersState.isHydrated = true;
+});
+
+
 export default beersState;

@@ -4,8 +4,7 @@ import * as injectTapEventPlugin from "react-tap-event-plugin";
 import { IntlProvider } from "react-intl";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 
-import BeersRoute from "./components/beers/Beers";
-import BeerDetailRoute from "./components/beers/BeerDetailRoute";
+import BeerMainRoute from "./components/beers/BeerMainRoute";
 import muiTheme from "./muiTheme";
 import baseLocale from "./i18n/en";
 import Main from "./components/Main";
@@ -25,8 +24,7 @@ class App extends React.Component {
                         <div>
                             <Navigation />
                             <Route exact path="/" component={Main} />
-                            <Route exact path="/beers" component={BeersRoute} />
-                            <Route path="/beers/:id" component={BeerDetailRoute} />
+                            <Route path="/beers" component={BeerMainRoute} />
                         </div>
                     </Router>
                 </IntlProvider>
