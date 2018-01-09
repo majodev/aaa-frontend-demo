@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
 
+import BeerCommentForm from "./BeerCommentForm";
 import * as i18n from "../../i18n/util";
 import { beersState } from "../../state/beersState";
 
@@ -34,6 +35,7 @@ export default class Component extends React.Component<IProps, IState> {
         return (
             <div>
                 <h2>Beer detail for beer id: {this.props.match.params.id}</h2>
+                <BeerCommentForm id={Number.parseInt(this.props.match.params.id)} />
                 <pre>{JSON.stringify(beersState.selectedBeer, null, 2)}</pre>
             </div>
         );

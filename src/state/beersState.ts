@@ -11,6 +11,7 @@ class BeersState {
     @persist("list") @observable beers: IBeer[] = [];
     @observable selectedBeer: IBeer | null = null;
     @observable isHydrated: boolean = false;
+    @persist("map") @observable commentsMap = new ObservableMap<string>();
     @persist("map") @observable private uriMap = new ObservableMap<boolean>();
 
     @computed get loading(): boolean {
@@ -24,6 +25,14 @@ class BeersState {
             ...this.beers,
             ...(await this.loadBeers())
         ], "id");
+    }
+
+    @action addComment(beerId: number, comment: string) {
+        this.commentsMap.set(`${beerId}`, comment);
+    }
+
+    @action deleteComment(beerId: number) {
+        this.commentsMap.delete(`${beerId}`);
     }
 
     @action async selectBeer(idToParse: number | string) {

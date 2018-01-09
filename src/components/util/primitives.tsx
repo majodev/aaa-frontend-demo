@@ -10,3 +10,4 @@ type MuiSVGIconConstructor = new () => mui.SvgIcon;
 
 export const IconDone: MuiSVGIconConstructor = require("material-ui/svg-icons/action/done").default;
 export const IconRestore: MuiSVGIconConstructor = require("material-ui/svg-icons/action/restore").default;
+export const IconSend: MuiSVGIconConstructor = require("material-ui/svg-icons/content/send").default;
